@@ -1,19 +1,25 @@
 const express = require('express')
 const path = require("path")
 const bcrypt = require("bcrypt")
-const collection = require('./config')
-const { name } = require('ejs')
+const collectionLogin = require('./config')
+const collectionWorkspace = require('./modelWorkspace')
+const collectionTask = require('./modelTask')
 const session = require("express-session")
-const { MongoDBStore } = require('connect-mongodb-session')
-const MongoDBSession = require("connect-mongodb-session")
-const MongoStore = require('connect-mongo')
+
 
 
 const app = express()
-const MongoURI = 'mongodb+srv://leticiagomes_db_user:30112025@cluster0.mlklg47.mongodb.net/Login'
+
 //tranformando dados em json
 app.use(express.json());
 app.use(express.urlencoded(extended = false))
+
+//criando session
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: false
+}))
 
 app.set('view engine', 'ejs')
 const PORT = 5000
@@ -44,14 +50,14 @@ app.post("/signup", async (req,res) =>{
         email: req.body.email,
         password: req.body.password
     }
-    const check = await collection.findOne({email: data.email});
+    const check = await collectionLogin.findOne({email: data.email});
 if(check){
         res.send("Email já está sendo utilizado")
 } else{
     const rounds = 10;
     const hashedSenha = await bcrypt.hash(data.password, rounds);
     data.password = hashedSenha;
-    const userdata = await collection.insertMany(data);
+    const userdata = await collectionLogin.insertMany(data);
     res.send("Cadastro realizado!")
     console.log(userdata)
 }
@@ -60,21 +66,56 @@ if(check){
 
 app.post("/login", async (req, res)=>{
     try{
-        const check = await collection.findOne({email: req.body.email});
+        const check = await collectionLogin.findOne({email: req.body.email});
         if(!check){
             res.send("Usuario não encontrado")
         }
         const senhaIgual = await bcrypt.compare(req.body.password, check.password);
         if(senhaIgual){
-            res.send("entrou")
+            
+            req.session.user = {id: check._id, nome: check.name, email: check.email}
+            res.redirect("/inicio")
         }else{
             res.send("senha errada");
         }
     } catch{
         res.send("wrong details")
-
-
     }
 }
 )
+
+// app.post("/inicio", async (req,res) =>{
+//     const taskdata = {
+//         title: req.body.title,
+//         description: req.body.description,
+//         workspaceId: req.body.workspaceId
+//     }
+//     const taskuserdata = await collectionWorkspace.insertOne(taskdata);
+//     res.send("Tarefa criada!")
+//     }
+// )
+app.post("/inicio", async (req,res) =>{
+    const taskdata = {
+        title: req.body.title,
+        description: req.body.description,
+        workspaceId: 1
+    }
+    const taskuserdata = await collectionTask.create(taskdata);
+    res.send("Tarefa criada!")
+    console.log(taskuserdata)
+    }
+)
+app.post("/inicio/criarWorkspace", async (req,res) =>{
+    const Workspacedata = {
+        owner: req.session.user.id,
+        workspaceName: req.body.workspaceName,
+        members: [req.session.user.id]
+    }
+    const workspaceuserdata = await collectionWorkspace.create(Workspacedata);
+    res.send("Workspace criado!")
+    console.log(workspaceuserdata)
+    }
+)
+
+
 

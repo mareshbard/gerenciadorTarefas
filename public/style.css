@@ -101,7 +101,7 @@ main{
 
 footer{
     display: flex;
-    /* position: fixed; */
+    position: fixed;
     background-color: #000000;
     color: #FFFFFF;
     padding: 2rem;
@@ -128,9 +128,9 @@ footer{
 }
 
 .tasks{
-    /* flex-direction: column; */
+    flex-direction: column;
     padding: 2rem;
-    width: 80%
+    width: 60%
 }
 
 .tasks label{

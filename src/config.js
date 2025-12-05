@@ -22,6 +22,9 @@ const LoginSchema = new mongoose.Schema({
         required: true }
 });
 
-const collection = new mongoose.model('Users', LoginSchema);
-module.exports = collection;
+
+
+
+const collectionLogin = new mongoose.model('Users', LoginSchema);
+module.exports = collectionLogin;
 
