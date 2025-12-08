@@ -19,7 +19,13 @@ const LoginSchema = new mongoose.Schema({
     },
     password: { 
         type: String, 
-        required: true }
+        required: true },
+    workspace: [
+        {
+            type: String,
+            ref: 'Workspace'
+        }
+    ]    
 });
 
 

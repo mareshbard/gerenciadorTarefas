@@ -12,20 +12,12 @@
 
     </header>
     <main>
-        <section class="tasks">
-            <h2>Workspace</h2>
-            <form action="createWorkspace" method="post">
-                <label for="workspaceName">Nome do workspace:</label>
-                <input type="text" id="workspaceName" name="workspaceName" required placeholder="Nome do workspace">
-            <button class="btn btn-dark" type="submit">Criar novo workspace</button>
-            </form>
-        </section>
-        <section class="tasks">
-            <form class="todo" action="inicio" method="post">
+                <section class="tasks">
+            <form class="todo" action="createTask" method="post">
                 <label for="titulo"> Titulo:</label>
                 <input type="text" id="title" name="title" required placeholder="Digite o titulo">
                 <br>
-                <label for="descrption"> Descrição:</label>
+                <label for="description"> Descrição:</label>
                 <input type="text" id="description" name="description" required placeholder="Digite a tarefa">
                 <br><br>
                 <button class="btn btn-dark" type="submit">Criar</button>
