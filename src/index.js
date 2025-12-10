@@ -50,9 +50,6 @@ app.get('/inicio', (req, res) => {
 app.get('/workspaces', checkLogin, (req, res) => {
     res.render('workspaces');
 })
-app.get('/tasks', checkLogin, (req, res) => {
-    res.render('tasks');
-})
 
 app.get('/signup', (req, res) => {
     res.render('signup');
@@ -61,6 +58,8 @@ app.get('/signup', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`)
 })
+
+
 
 app.post("/signup", async (req,res) =>{
 
@@ -85,6 +84,8 @@ if(check){
 
 })
 
+
+
 app.post("/login", async (req, res)=>{
     try{
         const check = await collectionLogin.findOne({email: req.body.email});
@@ -108,12 +109,23 @@ app.post("/createTask", checkLogin, async (req,res) =>{
     const taskdata = {
         title: req.body.title,
         description: req.body.description,
-        workspaceId: req.body.workspaceId
+        workspaceId: req.body.workspaceId,
+        status: 'toDo',
+        owner: req.session.user.id
     }
     const taskuserdata = await collectionTask.create(taskdata);
-    res.send("Tarefa criada!")
+    res.redirect('/workspace/' + req.body.workspaceId);
     console.log(taskuserdata)
     }
+)
+
+app.get('/updateTask/:workspaceId/:taskId', checkLogin, async (req, res) => {
+    const taskId = req.params.taskId;
+    const workspaceId = req.params.workspaceId;
+    const newStatus = req.query.status;
+    await collectionTask.findByIdAndUpdate(taskId, {status: newStatus});
+    res.redirect('/workspace/' + workspaceId);
+}
 )
 app.post("/createWorkspace", checkLogin, async (req,res) =>{
     const Workspacedata = {
@@ -125,42 +137,30 @@ app.post("/createWorkspace", checkLogin, async (req,res) =>{
 
     const checkWorkspace = await collectionWorkspace.findOne({workspaceName: Workspacedata.workspaceName});
     //verificando se existe algum workspace
-    if(!checkWorkspace){
-    const rounds = 10;
-    const hashedSenha = await bcrypt.hash(Workspacedata.password, rounds);
-    Workspacedata.password = hashedSenha;
-    const workspaceuserdata = await collectionWorkspace.create(Workspacedata);
-    res.send("Workspace criado!")
-    console.log(workspaceuserdata)
-    // req.session.user.workspace.push(workspaceuserdata._id)
-    await collectionLogin.updateOne(
-    { _id: req.session.user.id },
-    { $push: {workspace: workspaceuserdata._id } }
-);
-    console.log(req.session.user);
-     
+    if(checkWorkspace){
+            const checkPassword = await bcrypt.compare(req.body.password, checkWorkspace.password);
+            const checkUser = checkWorkspace.members.includes(req.session.user.id);
+             console.log("checkUser:", checkUser);
+    console.log("checkWorkspace:", checkWorkspace);
+    if(checkWorkspace && checkUser){
+            res.send("Workspace já criado e você já é membro!");
+        }
     } else{
-
-    const checkPassword = await bcrypt.compare(req.body.password, checkWorkspace.password);
-    console.log("checkPassword:", checkPassword);
-    if(checkWorkspace && checkPassword){
-            res.send("Workspace já criado");
-        } else{
     const rounds = 10;
     const hashedSenha = await bcrypt.hash(Workspacedata.password, rounds);
     Workspacedata.password = hashedSenha;
     const workspaceuserdata = await collectionWorkspace.create(Workspacedata);
-    res.send("Workspace criado!")
+    res.redirect('/totalWorkspaces');
     console.log(workspaceuserdata)
     // req.session.user.workspace.push(checkWorkspace._id)
     collectionLogin.updateOne(
     { _id: req.session.user.id },
-    { $push: {workspaces: workspaceuserdata._id} }
+    { $push: {workspace: workspaceuserdata._id} }
 );
     console.log(req.session.user);
         }
     }
-    }
+    
 )
 
 app.get('/workspace/:id', checkLogin, async (req, res) => {
@@ -169,10 +169,22 @@ app.get('/workspace/:id', checkLogin, async (req, res) => {
     const workspace = await collectionWorkspace.findById(workspaceId);
 
     res.render('tasks', {
-        workspaceName: workspace.workspaceName,
-        workspaceId: workspace._id,
+        // workspaceName: workspace.workspaceName,
+        workspaceId: workspaceId,
         listTasks: tasks 
     })
 });
 
+app.get('/totalWorkspaces', checkLogin, async (req,res) =>{
+    const userWorkspaces = await collectionWorkspace.find({members: req.session.user.id});
+    res.render('totalWorkspaces', {
+        listWorkspaces: userWorkspaces
+    })
+})
 
+// app.get('/tasks/:id', checkLogin, async (req, res) => {
+//     const workspaceTasks = await collectionTask.find({workspaceId: req.params.id});
+//     res.render('tasks', {
+//         listTasks: workspaceTasks
+//     })
+// })

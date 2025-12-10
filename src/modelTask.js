@@ -13,7 +13,17 @@ const TaskSchema = new mongoose.Schema({
     },
     workspaceId: { 
         type: mongoose.Schema.Types.ObjectId, 
-        required: true }
+        required: true },
+        status: {
+        type: String,
+        enum: ['done', 'doing', 'toDo'],
+        default: 'toDo'
+        },
+        owner: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Login',
+            required: true
+        }
 });
 
 

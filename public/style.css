@@ -119,24 +119,25 @@ footer{
 .toDo h5{
     background-color: #F1D3CE;
     padding: 0.5rem;
-    width: fit-content;
+    width: 100%;
+    
 }
 
 
 .doing h5{
     background-color: #F6EACB;
     padding: 0.5rem;
-    width: fit-content;
+    width: 100%;
 }
 
 .done h5{
     background-color: #D1E9F6;
     padding: 0.5rem;
-    width: fit-content;
+    width: 100%;
 }
 
 .tasks{
-    flex-direction: column;
+    flex-direction: row;
     padding: 2rem;
     width: 60%
 }
@@ -154,6 +155,10 @@ footer{
     border: 1px solid #D3D3D3;
 }
 
+.task{
+    padding: 1rem;
+}
+
 .options{
     display: flex;
     flex-direction: column;
@@ -161,9 +166,11 @@ footer{
     margin-bottom: 2rem;
     padding: 2rem;
     border-right: 2px solid #e4e6f8; 
+    position: sticky;
 }
 
 .options a{
     text-decoration: none;
     color: #000000; 
+    
 }

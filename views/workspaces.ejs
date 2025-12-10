@@ -14,6 +14,7 @@
     <main>
         <section class="tasks">
             <h2>Workspace</h2>
+            <h3>Criar</h3>
             <form action="createWorkspace" method="post">
                 <label for="workspaceName">Nome do workspace:</label>
                 <input type="text" id="workspaceName" name="workspaceName" required placeholder="Nome do workspace">
@@ -21,7 +22,15 @@
                 <input type="password" id="password" name="password" required placeholder="Digite sua senha">
                 <br><br>
                 <button class="btn btn-dark" type="submit">Criar novo workspace</button>
-            </form>
+            </form> <br><br>
+            <h3>Entrar</h3>
+            <form action="enterWorkspace" method="post">
+                <label for="workspaceId">Nome do workspace:</label>
+                <input type="text" id="workspaceName" name="workspaceName" required placeholder="Nome do workspace">
+                    <label for="password">Senha:</label>            
+                <input type="password" id="password" name="password" required placeholder="Digite senha do workspace">
+                <br><br>
+                <button class="btn btn-dark" type="submit">Entrar no workspace</button>
         </section>
     </main>
     <footer>

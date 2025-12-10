@@ -13,15 +13,19 @@
     </header>
     <main>
         <section class="tasks">
-            <h2>Workspace</h2>
-            <form action="createWorkspace" method="post">
-                <label for="workspaceName">Nome do workspace:</label>
-                <input type="text" id="workspaceName" name="workspaceName" required placeholder="Nome do workspace">
-                    <label for="password">Senha:</label>            
-                <input type="password" id="password" name="password" required placeholder="Digite sua senha">
-                <br><br>
-                <button class="btn btn-dark" type="submit">Criar novo workspace</button>
-            </form>
+         <h2>Meus Workspaces</h2>
+         <%if (listWorkspaces.length > 0) { %>
+        <% listWorkspaces.forEach( ws =>{ %>
+            <div class="workspace">
+                <h3><%= ws.workspaceName %></h3>
+                <p><%= ws.description %></p>
+                <p>Membros: <%=ws.members.length %></p>
+                <a class="btn btn-dark" href="/workspace/<%= ws._id%>">Entrar</a>
+            </div> <br><br>
+       <% }) %>
+            <% } else {%>
+            <p>Sem workspaces</p>
+            <% } %>
         </section>
     </main>
     <footer>

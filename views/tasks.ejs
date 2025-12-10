@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css">
      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
 <body>
@@ -18,13 +18,14 @@
             <a href="/totalWorkspaces">Meus Workspaces</a>
         </nav>
         <section class="tasks">
-            <form class="todo" action="createTask" method="post">
+            <form class="todo" action="/createTask" method="post">
                 <label for="titulo"> Titulo:</label>
                 <input type="text" id="title" name="title" required placeholder="Digite o titulo">
                 <br>
                 <label for="description"> Descrição:</label>
                 <input type="text" id="description" name="description" required placeholder="Digite a tarefa">
-                <input type="hidden" name="workspaceId" value="<%= workspaceId %>">
+                <input type="hidden" id="workspaceId" name="workspaceId" value="<%= workspaceId %>">
+                <!-- <input type="hidden" id="owner" name="owner" value="<%=  %>"> -->
                <br><br>
                 <button class="btn btn-dark" type="submit">Criar</button>
             </form>
@@ -33,13 +34,78 @@
                 <h5>
                     Tarefas a iniciar
                 </h5>
+                    <% if (listTasks.length > 0){ %>
+                        <% listTasks.forEach(task => {%>
+                            <% if (task.status === "toDo") {%>
+                                <div class="task">
+                                    <p>Titulo: <%= task.title %></p>
+                                    <p>Descrição: <%= task.description %></p>
+                                <div class="dropdown">
+                                    <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                        Mudar Status
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-dark">
+                                        <li><a class="dropdown-item" href="/updateTask/<%= workspaceId%>/<%= task._id %>?status=doing">Fazendo</a></li>
+                                        <li><a class="dropdown-item" href="/updateTask/<%= workspaceId%>/<%= task._id %>?status=done">Feitas</a></li>
+                                    </ul>
+                                </div>
+                                </div>
+                        <%}}) %>
+                    <% }%>
+                
             </div>
             <div class="doing">
-                <h5>Fazendo</h5>
+                
+                <h5>
+                    Fazendo
+                </h5>
+                    <% if (listTasks.length > 0){ %>
+                        <% listTasks.forEach(task => {%>
+                            <% if (task.status === "doing") {%>
+                                <div class="task">
+                                    <p>Titulo: <%= task.title %></p>
+                                    <p>Descrição: <%= task.description %></p>
+                                <div class="dropdown">
+                                    <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                        Mudar Status
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-dark">
+                                        <li><a class="dropdown-item" href="/updateTask/<%=workspaceId%>/<%= task._id %>?status=toDo">A Iniciar</a></li>
+                                        <li><a class="dropdown-item" href="/updateTask/<%=workspaceId%>/<%= task._id %>?status=done">Feitas</a></li>
+                                    </ul>
+                                </div>
+                                </div>
+                        <%}}) %>
+                    <% }%>
+                
+            
             </div>
 
             <div class="done">
-                <h5>Feitas</h5>
+                
+                <h5>
+                    Concluidas
+                </h5>
+                    <% if (listTasks.length > 0){ %>
+                        <% listTasks.forEach(task => {%>
+                            <% if (task.status === "done") {%>
+                                <div class="task">
+                                    <p>Titulo: <%= task.title %></p>
+                                    <p>Descrição: <%= task.description %></p>
+                                <div class="dropdown">
+                                    <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                        Mudar Status
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-dark">
+                                        <li><a class="dropdown-item" href="/updateTask/<%=workspaceId%>/<%= task._id %>?status=toDo">A Iniciar</a></li>
+                                        <li><a class="dropdown-item" href="/updateTask/<%=workspaceId%>/<%= task._id %>?status=doing">Fazendo</a></li>
+                                    </ul>
+                                </div>
+                                </div>
+                        <%}}) %>
+                    <% }%>
+                
+            
             </div>
 
         </section>
@@ -48,4 +114,5 @@
 
     </footer>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </html>
