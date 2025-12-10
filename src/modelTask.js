@@ -12,7 +12,7 @@ const TaskSchema = new mongoose.Schema({
         required: true,
     },
     workspaceId: { 
-        type: String, 
+        type: mongoose.Schema.Types.ObjectId, 
         required: true }
 });
 

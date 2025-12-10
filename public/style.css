@@ -1,7 +1,13 @@
 *{
-    font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
-
+body{
+    margin: 0;
+    display: flex;
+    min-height: 100vh;
+    background-color: #D1E9F6;
+    flex-direction: column;
+}
  /* main{
     background-color: #F6EACB;
 }  */
@@ -25,7 +31,7 @@
         justify-items: center;
         font-size: medium;
     }
-    
+
 }
 
 header{
@@ -40,6 +46,7 @@ header{
 main{
     display: flex;
     justify-content: center;
+    flex: 1;
 }
 
 .login a{
@@ -101,30 +108,31 @@ main{
 
 footer{
     display: flex;
-    position: fixed;
+    /* position: fixed; */
     background-color: #000000;
     color: #FFFFFF;
     padding: 2rem;
-    bottom: 0cm;
-    width: 100%;
-    
-
+    /* bottom: 0cm: */
+    width: 100%; 
 }
 
 .toDo h5{
     background-color: #F1D3CE;
     padding: 0.5rem;
+    width: fit-content;
 }
 
 
 .doing h5{
     background-color: #F6EACB;
     padding: 0.5rem;
+    width: fit-content;
 }
 
 .done h5{
     background-color: #D1E9F6;
     padding: 0.5rem;
+    width: fit-content;
 }
 
 .tasks{
@@ -144,4 +152,18 @@ footer{
     padding: 0.5rem;
     border-radius: 7px;
     border: 1px solid #D3D3D3;
+}
+
+.options{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    border-right: 2px solid #e4e6f8; 
+}
+
+.options a{
+    text-decoration: none;
+    color: #000000; 
 }
