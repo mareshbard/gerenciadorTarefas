@@ -1,14 +1,16 @@
 const express = require('express')
-const path = require("path")
 const bcrypt = require("bcrypt")
+const MongoStore = require('connect-mongo').default
 const collectionLogin = require('./config')
 const collectionWorkspace = require('./modelWorkspace')
 const collectionTask = require('./modelTask')
 const session = require("express-session")
 const{checkLogin}= require("./middlewares");
-const { workerData } = require('worker_threads')
-const MongoStore = require('connect-mongo')
 
+
+
+
+const URL = 'mongodb+srv://leticiagomes_db_user:30112025@cluster0.mlklg47.mongodb.net/Login'
 
 
 const app = express()
@@ -20,8 +22,16 @@ app.use(express.urlencoded(extended = false))
 //criando session
 app.use(session({
     secret: 'secret',
-    resave: true,
-    saveUninitialized: false
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: URL,
+        collectionName: 'sessions',
+        tt: 2 * 24 * 60 * 60
+    }),
+    cookie: {
+        maxAge: 1000 * 60 *60 *24,
+    }
 }))
 
 app.set('view engine', 'ejs')
@@ -98,7 +108,7 @@ app.post("/createTask", checkLogin, async (req,res) =>{
     const taskdata = {
         title: req.body.title,
         description: req.body.description,
-        workspaceId: req.session.user.id
+        workspaceId: req.body.workspaceId
     }
     const taskuserdata = await collectionTask.create(taskdata);
     res.send("Tarefa criada!")
@@ -153,5 +163,16 @@ app.post("/createWorkspace", checkLogin, async (req,res) =>{
     }
 )
 
+app.get('/workspace/:id', checkLogin, async (req, res) => {
+    const workspaceId = req.params.id;
+    const tasks =  await collectionTask.find({workspaceId: workspaceId});
+    const workspace = await collectionWorkspace.findById(workspaceId);
+
+    res.render('tasks', {
+        workspaceName: workspace.workspaceName,
+        workspaceId: workspace._id,
+        listTasks: tasks 
+    })
+});
 
 
