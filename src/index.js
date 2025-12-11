@@ -6,8 +6,7 @@ const collectionWorkspace = require('./modelWorkspace')
 const collectionTask = require('./modelTask')
 const session = require("express-session")
 const{checkLogin}= require("./middlewares");
-
-
+const{checkLogged}= require("./middlewares");
 
 
 const URL = 'mongodb+srv://leticiagomes_db_user:30112025@cluster0.mlklg47.mongodb.net/Login'
@@ -41,23 +40,32 @@ const PORT = 5000
 
 app.use(express.static("public"))
 app.use(express.static("imgs"))
-app.get('/login', (req, res) => {
-    res.render('login');
-})
-app.get('/inicio', (req, res) => {
-    res.render('inicio');
-})
-app.get('/workspaces', checkLogin, (req, res) => {
-    res.render('workspaces');
+app.get('/login', checkLogged, (req, res) => {
+    res.render('login', {currentPage: 'login'});
 })
 
-app.get('/signup', (req, res) => {
-    res.render('signup');
+app.get('/workspaces', checkLogin, (req, res) => {
+    res.render('workspaces', {currentPage: 'workspaces'});
+})
+
+app.get('/', (req, res)=> {
+    res.render('landingPage', {currentPage: 'home'});
+})
+
+app.get('/signup', checkLogged, (req, res) => {
+    res.render('signup', {currentPage: 'signup'});
+})
+
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('/');
+
 })
 
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`)
 })
+
 
 
 
@@ -69,6 +77,7 @@ app.post("/signup", async (req,res) =>{
         password: req.body.password,
         workspace: []
     }
+
     const check = await collectionLogin.findOne({email: data.email});
 if(check){
         res.send("Email já está sendo utilizado")
@@ -83,8 +92,6 @@ if(check){
 }
 
 })
-
-
 
 app.post("/login", async (req, res)=>{
     try{
@@ -171,20 +178,15 @@ app.get('/workspace/:id', checkLogin, async (req, res) => {
     res.render('tasks', {
         // workspaceName: workspace.workspaceName,
         workspaceId: workspaceId,
-        listTasks: tasks 
+        listTasks: tasks,
+        currentPage: 'tasks'
     })
 });
 
 app.get('/totalWorkspaces', checkLogin, async (req,res) =>{
     const userWorkspaces = await collectionWorkspace.find({members: req.session.user.id});
     res.render('totalWorkspaces', {
-        listWorkspaces: userWorkspaces
+        listWorkspaces: userWorkspaces,
+        currentPage: 'workspaces'
     })
 })
-
-// app.get('/tasks/:id', checkLogin, async (req, res) => {
-//     const workspaceTasks = await collectionTask.find({workspaceId: req.params.id});
-//     res.render('tasks', {
-//         listTasks: workspaceTasks
-//     })
-// })

@@ -12,21 +12,20 @@
         <%- include('partials/header'); %>
     </header>
     <main>
-        <section class="tasks">
-         <h2>Meus Workspaces</h2>
-         <%if (listWorkspaces.length > 0) { %>
-        <% listWorkspaces.forEach( ws =>{ %>
-            <div class="workspace">
-                <h3><%= ws.workspaceName %></h3>
-                <p><%= ws.description %></p>
-                <p>Membros: <%=ws.members.length %></p>
-                <a class="btn btn-dark" href="/workspace/<%= ws._id%>">Entrar</a>
-            </div> <br><br>
-       <% }) %>
-            <% } else {%>
-            <p>Sem workspaces</p>
-            <% } %>
+        <div class="mainStart">
+        <div class="start">
+            <h1>Organize tarefas em equipe com o DailyEasy </h1>
+            <img src="/imgs/landingImg.png" alt="Imagem de organização de tarefas">
+        </div>
+        <section class="info">
+            <article>
+                <h3>Facilidade e Organização</h3>
+                <p>Gerencie tarefas em equipe, planeje projetos e facilite seu trabalho</p>
+            </article>
         </section>
+        </div>
+
+        
     </main>
     <footer>
         <%- include('partials/footer'); %>

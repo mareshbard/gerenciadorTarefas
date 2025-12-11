@@ -1,0 +1,40 @@
+<div class="header-content">
+        <h3>DailyEasy</h3>
+        <ul class="nav">
+            <% if(currentPage === 'login') { %>
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/signup">Cadastro</a>
+                </li>
+            <% } %>
+
+            
+            <% if(currentPage === 'signup') { %>
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Login</a>
+                </li>
+            <% } %>
+
+            
+            <% if(currentPage === 'home') { %>
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Entrar</a>
+            <% } %>
+
+            <% if(currentPage === 'workspaces' || currentPage === 'tasks') { %>
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Sair</a>
+                </li>
+            <% } %>
+        
+        
+        </ul>
+        </div>

@@ -9,17 +9,7 @@
 </head>
 <body>
     <header>
-        <h3>DailyEasy</h3>
-        <ul class="nav">
-            
-            <li class="nav-item">
-                <a class="nav-link" href="/">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/signup">Cadastro</a>
-            </li>
-            
-        </ul>
+        <%- include('partials/header', {currentPage: currentPage}); %>
     </header>
     <main>
     <form class="login" action="login" method="post">
@@ -36,7 +26,7 @@
     <br>
     </main>
     <footer>
-    <p>&copy; 2025 DailyEasy. Todos os direitos reservados.</p>
+        <%- include('partials/footer') %>
     </footer>
 </body>
 </html>
