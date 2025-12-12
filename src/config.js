@@ -1,3 +1,4 @@
+
 const mongoose = require('mongoose');
 const session = require("express-session")
 const connect = mongoose.connect("mongodb+srv://leticiagomes_db_user:30112025@cluster0.mlklg47.mongodb.net/Login");

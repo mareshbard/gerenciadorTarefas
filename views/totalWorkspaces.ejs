@@ -12,14 +12,16 @@
         <%- include('partials/header'); %>
     </header>
     <main>
+        <%- include('partials/sidebar'); %>
         <section class="tasks">
-         <h2>Meus Workspaces</h2>
+         <h2>Meus Workspaces</h2><br>
          <%if (listWorkspaces.length > 0) { %>
         <% listWorkspaces.forEach( ws =>{ %>
             <div class="workspace">
                 <h3><%= ws.workspaceName %></h3>
                 <p><%= ws.description %></p>
                 <p>Membros: <%=ws.members.length %></p>
+                <h4>Código: <%= ws.code %></h4>
                 <a class="btn btn-dark" href="/workspace/<%= ws._id%>">Entrar</a>
             </div> <br><br>
        <% }) %>

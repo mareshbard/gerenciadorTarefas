@@ -37,7 +37,9 @@ body{
         font-size: 3vh;
     }
 
-
+    main{
+        flex-direction: row;
+    }
     .start h1{
         font-size: 3vh;
     }
@@ -81,6 +83,7 @@ main{
 .start{
     display: flex;
     align-items: center;
+    padding: 1rem;
     justify-content: center;
     height: 80%;
     width: 80%;

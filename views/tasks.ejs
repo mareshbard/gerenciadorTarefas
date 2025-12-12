@@ -12,12 +12,9 @@
         <%- include('partials/header'); %>
     </header>
     <main>
-        <nav class="options">
-            <a href="/">Home</a>
-            <a href="/workspaces">Novo Workspace</a>
-            <a href="/totalWorkspaces">Meus Workspaces</a>
-        </nav>
+        <%- include('partials/sidebar'); %>
         <section class="tasks">
+            <h2>Tarefas</h2>
             <form class="todo" action="/createTask" method="post">
                 <label for="titulo"> Titulo:</label>
                 <input type="text" id="title" name="title" required placeholder="Digite o titulo">
@@ -47,7 +44,10 @@
                                     <ul class="dropdown-menu dropdown-menu-dark">
                                         <li><a class="dropdown-item" href="/updateTask/<%= workspaceId%>/<%= task._id %>?status=doing">Fazendo</a></li>
                                         <li><a class="dropdown-item" href="/updateTask/<%= workspaceId%>/<%= task._id %>?status=done">Feitas</a></li>
+                                        <li><a class="dropdown-item" href="/deleteTask/<%= workspaceId%>/<%= task._id %>">Excluir</a></li>
+                                        
                                     </ul>
+                                    
                                 </div>
                                 </div>
                         <%}}) %>

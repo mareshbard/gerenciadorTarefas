@@ -1,3 +1,6 @@
+
+
+
 const express = require('express')
 const bcrypt = require("bcrypt")
 const MongoStore = require('connect-mongo').default
@@ -112,6 +115,7 @@ app.post("/login", async (req, res)=>{
 }
 )
 
+
 app.post("/createTask", checkLogin, async (req,res) =>{
     const taskdata = {
         title: req.body.title,
@@ -132,30 +136,37 @@ app.get('/updateTask/:workspaceId/:taskId', checkLogin, async (req, res) => {
     const newStatus = req.query.status;
     await collectionTask.findByIdAndUpdate(taskId, {status: newStatus});
     res.redirect('/workspace/' + workspaceId);
-}
-)
+})
+app.get('/deleteTask/:workspaceId/:taskId', checkLogin, async(req, res) => {
+    const taskId = req.params.taskId;
+    const workspaceId = req.params.workspaceId;
+    const taskExclude = await collectionTask.findById(taskId)
+    if(taskExclude){
+        await collectionTask.deleteOne(taskExclude)
+        res.redirect('/workspace/' + req.params.workspaceId);
+    }
+})
+
 app.post("/createWorkspace", checkLogin, async (req,res) =>{
+    const code = createCode(5);
     const Workspacedata = {
         owner: req.session.user.id,
         workspaceName: req.body.workspaceName,
         members: [req.session.user.id],
-        password: req.body.password
+        code: code
     }
 
     const checkWorkspace = await collectionWorkspace.findOne({workspaceName: Workspacedata.workspaceName});
     //verificando se existe algum workspace
-    if(checkWorkspace){
-            const checkPassword = await bcrypt.compare(req.body.password, checkWorkspace.password);
-            const checkUser = checkWorkspace.members.includes(req.session.user.id);
-             console.log("checkUser:", checkUser);
-    console.log("checkWorkspace:", checkWorkspace);
-    if(checkWorkspace && checkUser){
-            res.send("Workspace já criado e você já é membro!");
-        }
-    } else{
-    const rounds = 10;
-    const hashedSenha = await bcrypt.hash(Workspacedata.password, rounds);
-    Workspacedata.password = hashedSenha;
+    // if(checkWorkspace){
+    //         const checkUser = checkWorkspace.members.includes(req.session.user.id);
+    //          console.log("checkUser:", checkUser);
+    // console.log("checkWorkspace:", checkWorkspace);
+    // if(checkWorkspace && checkUser){
+    //         res.send("Workspace já criado e você já é membro!");
+    //     }
+    // } else{
+    
     const workspaceuserdata = await collectionWorkspace.create(Workspacedata);
     res.redirect('/totalWorkspaces');
     console.log(workspaceuserdata)
@@ -166,9 +177,44 @@ app.post("/createWorkspace", checkLogin, async (req,res) =>{
 );
     console.log(req.session.user);
         }
+)
+// }
+function createCode(size){
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let code = '';
+    const caracteresLength = chars.length;
+    for(let i = 0; i < size; i++){
+        code += chars.charAt(Math.floor(Math.random() * caracteresLength))
+    }
+    return code;
+}
+
+app.post('/enterWorkspace', checkLogin, async (req,res) => {
+    const checkCode = await collectionWorkspace.findOne({code: req.body.code});
+    const userId = req.session.user.id;
+
+
+    if(checkCode){
+        if(checkCode.members.includes(userId)){
+        res.redirect('/totalWorkspaces')
+    } else{
+    await collectionWorkspace.updateOne(
+    { _id: checkCode._id},
+    { $addToSet: {members: userId} 
+})
+    await collectionLogin.updateOne(
+        {_id: userId},
+        {$addToSet: {workspace: checkCode._id}}
+    )
+    res.redirect('/totalWorkspaces')
     }
     
-)
+    }
+    else{
+        res.send("nao encontrado")
+    }
+    
+})
 
 app.get('/workspace/:id', checkLogin, async (req, res) => {
     const workspaceId = req.params.id;
